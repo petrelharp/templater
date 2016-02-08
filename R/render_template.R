@@ -55,8 +55,8 @@ render_template <- function ( template,
     if (length(opts.knit)>0) { do.call( knitr::opts_chunk$set, opts.knit ) }
     knitr::knit(template.loc,output=basename(md.file))
     if (html) {
-        dir.create(dirname(output),showWarnings=FALSE,recursive=TRUE)
-        cat("Using pandoc to write html output to", output, "\n")
+        dir.create(dirname(output.loc),showWarnings=FALSE,recursive=TRUE)
+        cat("Using pandoc to write html output to", output.loc, "\n")
         cat("pandoc", c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc), paste("--output", output.loc) ),"\n" )
         system2( "pandoc", args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc), paste("--output", output.loc) ) )
     }
