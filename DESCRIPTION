@@ -2,9 +2,12 @@ Package: templater
 Title: Reproducibly Knit Templated Reports
 Version: 0.1
 Authors@R: person("Peter", "Ralph", email = "petrel.harp@gmail.com", role = c("aut", "cre"))
-Description: This provides a framework for safe, parallel processing of templated reports,
-    allowing the same .Rmd template to be used, with different inputs, to create many reports.
-Depends: R (>= 3.2.2)
+Description: This provides a framework for safe, parallel processing of
+    templated reports, allowing the same .Rmd template to be used, with different
+    inputs, to create many reports.
+Depends:
+    R (>= 3.2.2)
 License: GPL >= 2.0
 LazyData: true
 Requires: knitr
+RoxygenNote: 5.0.1.9000
