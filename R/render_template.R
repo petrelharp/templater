@@ -52,7 +52,7 @@ render_template <- function ( template,
     on.exit(setwd(thisdir),add=TRUE)
 	knitr::opts_chunk$set( fig.path=file.path("figure",outbase,""),
                            cache.path=file.path("cache",outbase,"") )
-    do.call( knitr::opts_chunk$set, opts.knit )
+    if (length(opts.knit)>0) { do.call( knitr::opts_chunk$set, opts.knit ) }
     knitr::knit(template.loc,output=basename(md.file))
     if (html) {
         dir.create(dirname(output),showWarnings=FALSE,recursive=TRUE)
