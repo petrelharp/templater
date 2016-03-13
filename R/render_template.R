@@ -34,7 +34,7 @@ render_template <- function ( template,
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
     if (template==output) { stop("Specify an output file that is different than the template.") }
     thisdir <- getwd()
-    .fullpath <- function (x) { file.path(normalizePath("."),x) }
+    .fullpath <- function (x) { if (substr(x,1,1)=="/") { x } else { file.path(normalizePath("."),x) } }
     template.loc <- .fullpath(template)
     output.loc <- .fullpath(output)
     resource.dir.loc <- .fullpath(resource.dir)
