@@ -23,15 +23,16 @@
 #' for knitr will be 'outdir/cache/out/' and 'outdir/figure/out', respectively.
 #' This ensures that separate output files have distinct caches and figures.
 render_template <- function ( template,
-                           output,
+                           output=gsub(".Rmd$",".html",template),
                            html=grepl("html$",output),
                            md.file=gsub("[.](html|md)$",".md",output),
-                           resource.dir="../resources",
+                           resource.dir="resources",
                            macros="macros.tex",
                            opts.knit=NULL
                        ) {
     # if output is a directory, we won't be able to overwrite it
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
+    if (template==output) { stop("Specify an output file that is different than the template.") }
     thisdir <- getwd()
     .fullpath <- function (x) { file.path(normalizePath("."),x) }
     template.loc <- .fullpath(template)
@@ -81,7 +82,7 @@ render_template <- function ( template,
                    paste("--variable 'libraries-url:",resource.dir,"'",sep=''), 
                    "--no-highlight", 
                    paste("--variable highlightjs=",file.path(resource.dir,"highlight"),sep=''), 
-                   paste("--include-in-header ", file.path(resource.dir,"mathjax-config.js"))
+                   paste("--include-in-header ", system.file("mathjax-config.js",package='templater'))
                )
         if (file.exists(macros)) {
             temp.macros <- tempfile()
