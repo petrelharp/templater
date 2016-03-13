@@ -26,7 +26,7 @@ render_template <- function ( template,
                            output=gsub(".Rmd$",".html",template),
                            html=grepl("html$",output),
                            md.file=gsub("[.](html|md)$",".md",output),
-                           resource.dir="resources",
+                           resource.dir=system.file(package="templater"),
                            macros="macros.tex",
                            opts.knit=NULL
                        ) {
@@ -77,13 +77,13 @@ render_template <- function ( template,
                    "--section-divs", 
                    paste("--template", .pandoc.template),
                    "--variable 'theme:bootstrap'", 
-                   paste("--include-in-header ", file.path(resource.dir,"header-scripts.html")), 
+                   # paste("--include-in-header ", file.path(resource.dir,"header-scripts.html")), 
                    "--mathjax", 
                    paste("--variable 'mathjax-url:",.mathjax,"?config=TeX-AMS-MML_HTMLorMML'",sep=''), 
                    paste("--variable 'libraries-url:",resource.dir,"'",sep=''), 
                    "--no-highlight", 
                    paste("--variable highlightjs=",file.path(resource.dir,"highlight"),sep=''), 
-                   paste("--include-in-header ", system.file("mathjax-config.js",package='templater'))
+                   paste("--include-in-header ", file.path(resource.dir,"mathjax-config.js"))
                )
         if (file.exists(macros)) {
             temp.macros <- tempfile()
