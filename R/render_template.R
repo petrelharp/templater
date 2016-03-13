@@ -67,6 +67,7 @@ render_template <- function ( template,
 
 .pandoc.opts <-  function (resource.dir, 
                            .local.mathjax = "/usr/share/javascript/mathjax/MathJax.js",
+                           .pandoc.template = system.file("rmarkdown-template.html",package="templater"),
                            macros = "macros.tex" ) {
         .mathjax <- if (file.exists(.local.mathjax)) { .local.mathjax } else { "https://cdn.mathjax.org/mathjax/latest/MathJax.js" }
         opts <- c("--to html", 
@@ -74,7 +75,7 @@ render_template <- function ( template,
                    "--self-contained", 
                    "--standalone", 
                    "--section-divs", 
-                   paste("--template", file.path(resource.dir,"rmarkdown-template.html")), 
+                   paste("--template", .pandoc.template),
                    "--variable 'theme:bootstrap'", 
                    paste("--include-in-header ", file.path(resource.dir,"header-scripts.html")), 
                    "--mathjax", 
