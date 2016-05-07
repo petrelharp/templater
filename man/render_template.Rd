@@ -7,7 +7,8 @@
 render_template(template, output = gsub(".Rmd$", ".html", template),
   html = grepl("html$", output), md.file = gsub("[.](html|md)$", ".md",
   output), resource.dir = system.file(package = "templater"),
-  macros = "macros.tex", opts.knit = NULL)
+  macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
+  verbose = TRUE)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -21,6 +22,12 @@ render_template(template, output = gsub(".Rmd$", ".html", template),
 \item{resource.dir}{Directory that files referenced in pandoc options are in.}
 
 \item{macros}{Name of a file with LaTeX macros.}
+
+\item{opts.knit}{List of additional options for \code{knitr::opts_knit$set()}.}
+
+\item{change.rootdir}{Whether to evalute the template in the output directory (rather than the template directory).}
+
+\item{verbose}{Whether to print commands sufficient to recreate what is done.}
 }
 \value{
 The name of the output file.
@@ -32,6 +39,9 @@ To avoid this, here we switch to the directory of the markdown file before runni
 If the name of the output is 'outdir/out.html', then the 'cache' and 'figure' directories
 for knitr will be 'outdir/cache/out/' and 'outdir/figure/out', respectively.
 This ensures that separate output files have distinct caches and figures.
+
+This executes in the output directory (precisely, the directory where \code{md.file} lives),
+which is not necessarily in the same directory as the template.
 }
 \description{
 Calls "knit()" on the template given,

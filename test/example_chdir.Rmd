@@ -1,0 +1,9 @@
+This template will print the numbers in the files `x` and `y` in whatever directory it is in,
+for instance, 
+if rendered as `render_template("example_chdir.Rmd", output="a/sum.html", change.rootdir=TRUE)`,
+and there are files `a/x` and `a/y`, the numbers in those files should appear below.
+```{r}
+x <- scan('x')
+y <- scan('y')
+```
+In this directory, $x=`r x`$ and $y=`r y`$, so $x+y=`r x+y`$.

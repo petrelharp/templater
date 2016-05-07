@@ -1,0 +1,8 @@
+A correlation with `r n` points:
+```{r cor}
+x <- rnorm(n)
+y <- x/2+rnorm(n)
+plot( x, y )
+abline(coef(lm(y~x)))
+```
+
