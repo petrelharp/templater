@@ -29,7 +29,7 @@
 #' This executes in the output directory (precisely, the directory where \code{md.file} lives),
 #' which is not necessarily in the same directory as the template.
 render_template <- function ( template,
-                           output=gsub(".Rmd$",".html",template),
+                           output=gsub("[.](Rmd|md)$",".html",template),
                            html=grepl("html$",output),
                            md.file=gsub("[.](html|md)$",".md",output),
                            resource.dir=system.file(package="templater"),
@@ -42,7 +42,7 @@ render_template <- function ( template,
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
     if (template==output) { stop("Specify an output file that is different than the template.") }
     thisdir <- getwd()
-    .fullpath <- function (x) { if (substr(x,1,1)=="/") { x } else { file.path(normalizePath("."),x) } }
+    .fullpath <- function (x) { ifelse( is_absolute_path(x), x, file.path(normalizePath("."),x) ) }
     template.loc <- .fullpath(template)
     output.loc <- .fullpath(output)
     resource.dir.loc <- .fullpath(resource.dir)
@@ -131,4 +131,16 @@ write_table_cache <- function (x,
     outfile <- file.path( knitr::opts_current$get("cache.path"), file )
     write.csv( x, file=file, ... )
     return( outfile )
+}
+
+#' Check if Path is Absolute
+#'
+#' Absolute paths start with either ~ or / (linux) or X:/ or X:\\ (windows).
+#'
+#' @param x The paths to be checked
+#'
+#' @return A logical vector.
+is_absolute_path <- function (x) {
+    prefixes <- lapply( strsplit(x,"[/\\]"), "[", 1 )
+    return( grepl( "^.:$", prefixes ) | (prefixes == "") | (substr(prefixes,1,1)=="~") )
 }
