@@ -4,7 +4,7 @@
 \alias{render_template}
 \title{Safely Compile a R/markdown Template}
 \usage{
-render_template(template, output = gsub(".Rmd$", ".html", template),
+render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   html = grepl("html$", output), md.file = gsub("[.](html|md)$", ".md",
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
