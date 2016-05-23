@@ -8,7 +8,7 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   html = grepl("html$", output), md.file = gsub("[.](html|md)$", ".md",
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
-  verbose = TRUE)
+  mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -27,6 +27,8 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
 
 \item{change.rootdir}{Whether to evalute the template in the output directory (rather than the template directory).}
 
+\item{mathjax.loc}{Location to look for a local copy of MathJax (harmless if not present).}
+
 \item{verbose}{Whether to print commands sufficient to recreate what is done.}
 }
 \value{
@@ -42,6 +44,9 @@ This ensures that separate output files have distinct caches and figures.
 
 This executes in the output directory (precisely, the directory where \code{md.file} lives),
 which is not necessarily in the same directory as the template.
+
+The html document produced will use the copy of MathJax at \code{mathjax.loc} if it is not NULL and that file is present,
+but will fall back on the CDN \code{https://cdn.mathjax.org/mathjax/latest/MathJax.js} if it is not.
 }
 \description{
 Calls "knit()" on the template given,
