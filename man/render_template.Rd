@@ -2,13 +2,14 @@
 % Please edit documentation in R/render_template.R
 \name{render_template}
 \alias{render_template}
-\title{Safely Compile a R/markdown Template}
+\title{Compile a R/markdown Template}
 \usage{
 render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   html = grepl("html$", output), md.file = gsub("[.](html|md)$", ".md",
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
-  mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE)
+  mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE,
+  clean = TRUE)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -30,6 +31,8 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
 \item{mathjax.loc}{Location to look for a local copy of MathJax (harmless if not present).}
 
 \item{verbose}{Whether to print commands sufficient to recreate what is done.}
+
+\item{clean}{Whether to delete intermediate files (the .md file, if the output is html).}
 }
 \value{
 The name of the output file.

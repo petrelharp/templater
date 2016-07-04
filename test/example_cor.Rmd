@@ -1,3 +1,9 @@
+Before running this script, `n` should be defined,
+for instance, from the terminal,
+```
+Rscript -e 'n=rpois(1,1000); templater::render_template("example_cor.Rmd",output=sprintf("example_cor_%d.html",n))'
+```
+
 A correlation with `r n` points:
 ```{r cor}
 x <- rnorm(n)

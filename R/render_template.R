@@ -1,5 +1,5 @@
 
-#' Safely Compile a R/markdown Template
+#' Compile a R/markdown Template
 #'
 #' Calls "knit()" on the template given,
 #' directing output to the given output name,
@@ -16,6 +16,7 @@
 #' @param change.rootdir Whether to evalute the template in the output directory (rather than the template directory).
 #' @param mathjax.loc Location to look for a local copy of MathJax (harmless if not present).
 #' @param verbose Whether to print commands sufficient to recreate what is done.
+#' @param clean Whether to delete intermediate files (the .md file, if the output is html).
 #' @export
 #' @return The name of the output file.
 #' Note that by default, both knitr and pandoc look for figures relative to the *current directory*,
@@ -42,7 +43,8 @@ render_template <- function ( template,
                            opts.knit=NULL,
                            change.rootdir=FALSE,
                            mathjax.loc="/usr/share/javascript/mathjax/MathJax.js",
-                           verbose=TRUE
+                           verbose=TRUE,
+                           clean=TRUE
                        ) {
     # if output is a directory, we won't be able to overwrite it
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
@@ -80,6 +82,10 @@ render_template <- function ( template,
         if (verbose) cat("Using pandoc to write html output to", output.loc, "\n")
         if (verbose) cat("pandoc", c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc), paste("--output", output.loc) ),"\n" )
         system2( "pandoc", args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc), paste("--output", output.loc) ) )
+        if (clean) {
+            if (verbose) cat(sprintf("unlink(%s)",md.file),"\n")
+            unlink(md.file)
+        }
     }
     return(output.loc)
 }
