@@ -44,7 +44,7 @@ render_template <- function ( template,
                            change.rootdir=FALSE,
                            mathjax.loc="/usr/share/javascript/mathjax/MathJax.js",
                            verbose=TRUE,
-                           clean=TRUE
+                           clean=FALSE
                        ) {
     # if output is a directory, we won't be able to overwrite it
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
