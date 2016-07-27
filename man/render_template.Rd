@@ -9,7 +9,7 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
   mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE,
-  clean = TRUE)
+  clean = FALSE, ...)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -33,6 +33,8 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
 \item{verbose}{Whether to print commands sufficient to recreate what is done.}
 
 \item{clean}{Whether to delete intermediate files (the .md file, if the output is html).}
+
+\item{...}{Additional parameters passed to \code{knitr::knit()}.}
 }
 \value{
 The name of the output file.
@@ -50,6 +52,11 @@ which is not necessarily in the same directory as the template.
 
 The html document produced will use the copy of MathJax at \code{mathjax.loc} if it is not NULL and that file is present,
 but will fall back on the CDN \code{https://cdn.mathjax.org/mathjax/latest/MathJax.js} if it is not.
+
+
+If you want the code in the .Rmd file to be evaluated in the current environment,
+as is the default if you call \code{knit("myfile.Rmd")}, then pass the option
+\code{envir=environment()} (or, \code{envir=globalenv()} if you want the global environment).
 }
 \description{
 Calls "knit()" on the template given,

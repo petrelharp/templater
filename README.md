@@ -78,3 +78,12 @@ in ways that I find more useful:
     because it is very big. But, what if you want to view your files without being connected to the internet?
     This produces a file that will use a local copy of MathJax, if present, and fall back on the CDN (i.e., the internet).
 
+
+## Notes
+
+- When debugging it's useful to evaluate the code in your Rmarkdown file in the global environment, so you can play around with the result.
+    To do this, just pass in the argument `envir=globalenv()`.
+
+- If you don't have `pandoc` available where you're running this, you can create a "dummy" pandoc (an executable that does nothing),
+    make sure to pass in `clean=FALSE`, then copy the markdown file and the `figure/` directory somewhere else later
+    to run pandoc on (just call `render_template()` on the `.md` file).
