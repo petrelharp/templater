@@ -17,6 +17,7 @@
 #' @param mathjax.loc Location to look for a local copy of MathJax (harmless if not present).
 #' @param verbose Whether to print commands sufficient to recreate what is done.
 #' @param clean Whether to delete intermediate files (the .md file, if the output is html).
+#' @param width The width of the container (in valid html code).
 #' @param ... Additional parameters passed to \code{knitr::knit()}.
 #' @export
 #' @return The name of the output file.
@@ -50,6 +51,7 @@ render_template <- function ( template,
                            mathjax.loc="/usr/share/javascript/mathjax/MathJax.js",
                            verbose=TRUE,
                            clean=FALSE,
+                           width="940px",
                            ...
                        ) {
     # if output is a directory, we won't be able to overwrite it
@@ -96,8 +98,8 @@ render_template <- function ( template,
     if (html) {
         dir.create(dirname(output.loc),showWarnings=FALSE,recursive=TRUE)
         if (verbose) cat("Using pandoc to write html output to", output.loc, "\n")
-        if (verbose) cat("pandoc", c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc), paste("--output", output.loc) ),"\n" )
-        system2( "pandoc", args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc), paste("--output", output.loc) ) )
+        if (verbose) cat("pandoc", c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ),"\n" )
+        system2( "pandoc", args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ) )
         if (clean) {
             if (verbose) cat(sprintf("unlink(%s)",md.file),"\n")
             unlink(md.file)
@@ -110,7 +112,8 @@ render_template <- function ( template,
 .pandoc.opts <-  function (resource.dir, 
                            .local.mathjax = "/usr/share/javascript/mathjax/MathJax.js",
                            .pandoc.template = system.file("rmarkdown-template.html",package="templater"),
-                           macros = "macros.tex" ) {
+                           macros = "macros.tex",
+                           width="940px" ) {
     # .mathjax <- if (file.exists(.local.mathjax)) { .local.mathjax } else { "https://cdn.mathjax.org/mathjax/latest/MathJax.js" }
     # the template will deal even if this file doesn't exist
     .mathjax <- if ( (!is.null(.local.mathjax)) && is.character(.local.mathjax) ) { .local.mathjax } else { "https://cdn.mathjax.org/mathjax/latest/MathJax.js" }
@@ -125,6 +128,7 @@ render_template <- function ( template,
                "--mathjax", 
                paste("--variable 'mathjax-url:",.mathjax,"?config=TeX-AMS-MML_HTMLorMML'",sep=''), 
                paste("--variable 'libraries-url:",resource.dir,"'",sep=''), 
+               paste("--variable 'width:",width,"'",sep=''), 
                "--no-highlight", 
                paste("--variable highlightjs=",file.path(resource.dir,"highlight"),sep=''), 
                paste("--include-in-header ", file.path(resource.dir,"mathjax-config.js"))

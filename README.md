@@ -6,6 +6,12 @@ is to enable a workflow where a `.Rmd` template
 is written with externally specified inputs, 
 and processed many times, with different inputs, to create different reports.
 
+Features:
+
+- Safe to render the same template into many outputs without interference.
+- Evaluation in current or target directory.
+- Control the width of the html output.
+
 ## How?
 
 There are two basic use cases, that differ in whether you write your template 
