@@ -9,7 +9,7 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
   mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE,
-  clean = FALSE, ...)
+  clean = FALSE, width = "940px", ...)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -33,6 +33,8 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
 \item{verbose}{Whether to print commands sufficient to recreate what is done.}
 
 \item{clean}{Whether to delete intermediate files (the .md file, if the output is html).}
+
+\item{width}{The width of the container (in valid html code).}
 
 \item{...}{Additional parameters passed to \code{knitr::knit()}.}
 }
