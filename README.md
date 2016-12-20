@@ -24,22 +24,26 @@ Both of the following examples are in the [test/](test/) directory.
 Suppose we want to compile a template programatically many times,
 while varying a parameter that is pre-specified.
 For instance, if `example_cor.Rmd` contains:
-````
-A correlation with `r n` points:
-```{r}
-x <- rnorm(n)
-y <- x/2+rnorm(n)
-plot( x, y )
-abline(coef(lm(y~x)))
-```
-````
-To do this, `n` must be specified beforehand;
+
+
+    A correlation with `r n` points:
+    ```{r}
+    x <- rnorm(n)
+    y <- x/2+rnorm(n)
+    plot( x, y )
+    abline(coef(lm(y~x)))
+    ```
+  
+
+To compile this file, `n` must be specified beforehand;
 we could produce ten such output files like so:
-```
+
+```r
 for (n in 10*(1:10)) {
     render_template("example_cor.Rmd", output=paste0("cor_",n,".html"))
 }
 ```
+
 This example isn't using the fact that compilation occurs in the directory of the template;
 but we could add external resources to that location, for instance.
 
@@ -50,15 +54,15 @@ we want to display those numbers in each subdirectory.
 Therefore, we want the template to look for the *same* files relative to its *output* location;
 this is achieved with the option `change.rootdir=TRUE`.
 Here is an example template, `example_chdir.Rmd`:
-````
-```{r}
-x <- scan('x')
-y <- scan('y')
-```
-In this directory, $x=`r x`$ and $y=`r y`$, so $x+y=`r x+y`$.
-````
-This would be rendered as:
-```
+
+    ```{r}
+    x <- scan('x')
+    y <- scan('y')
+    ```
+    In this directory, $x=`r x`$ and $y=`r y`$, so $x+y=`r x+y`$.
+
+This would be rendered using this code:
+```r
 render_template("example_chdir.Rmd",output="a/sum.html",change.rootdir=TRUE)
 render_template("example_chdir.Rmd",output="b/sum.html",change.rootdir=TRUE)
 ```
