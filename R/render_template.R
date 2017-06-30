@@ -54,12 +54,11 @@ render_template <- function ( template,
                            width="940px",
                            ...
                        ) {
-    # if output is a directory, we won't be able to overwrite it
+    pandoc.only <- (missing(template) && ! missing(md.file))
+    if (pandoc.only) { output <- gsub("[.](Rmd|md)$", ".html", md.file) }
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
-    if (template==output) { stop("Specify an output file that is different than the template.") }
     thisdir <- getwd()
     .fullpath <- function (x) { ifelse( is_absolute_path(x), x, file.path(normalizePath("."),x) ) }
-    template.loc <- .fullpath(template)
     output.loc <- .fullpath(output)
     resource.dir.loc <- .fullpath(resource.dir)
     macros.loc <- .fullpath(macros)
@@ -70,31 +69,35 @@ render_template <- function ( template,
     if (change.rootdir) { opts.knit$root.dir <- "." }
     # outbase is everything but the last suffix in md.file
     outbase <- gsub("[.][^.]*$","",basename(md.file))
-    if (verbose) {
-        cat("## run_template:\n")
-        cat(paste("setwd('",md.dir,"')\n",sep=''))
-        cat(paste("knitr::opts_chunk$set( fig.path=file.path('figure','",outbase,"',''), 
-                  cache.path=file.path('cache','",outbase,"','') )\n",sep=''))
-        if (length(opts.knit)>0) cat(paste("knitr::opts_knit$set(", paste(names(opts.knit),paste0('"',opts.knit,'"'),sep="="), ")\n"))
-        ## without dots:
-        # cat(paste("knitr::knit('",template.loc,"',output='",basename(md.file),"')\n",sep=''))
-        ## attempt 1:
-        # could do this with deparse(call(...)) but don't see how to put the 'knitr::' into the call...
-        # knit.call <- do.call( call, c( list( "knit", template.loc, output=basename(md.file) ), lapply(as.list(substitute(list(...)))[-1L],deparse) ) )
-        # cat( paste0("knitr::", paste(deparse(knit.call,width.cutoff=500L),collapse=" ")), "\n" )
-        ## attempt 2:
-        dotargs <- as.list(substitute(list(...)))[-1L]
-        dotarg.string <- paste( names(dotargs), sapply( dotargs, deparse ), sep="=", collapse=", " )
-        knit.call <- call( "knit", template.loc, output=basename(md.file) )
-        cat( gsub( ") *$", paste(",",dotarg.string,")"), paste( deparse(knit.call,width.cutoff=500L), collapse=" ") ), "\n")
+    if (!pandoc.only) {
+        template.loc <- .fullpath(template)
+        if (template==output) { stop("Specify an output file that is different than the template.") }
+        if (verbose) {
+            cat("## run_template:\n")
+            cat(paste("setwd('",md.dir,"')\n",sep=''))
+            cat(paste("knitr::opts_chunk$set( fig.path=file.path('figure','",outbase,"',''), 
+                      cache.path=file.path('cache','",outbase,"','') )\n",sep=''))
+            if (length(opts.knit)>0) cat(paste("knitr::opts_knit$set(", paste(names(opts.knit),paste0('"',opts.knit,'"'),sep="="), ")\n"))
+            ## without dots:
+            # cat(paste("knitr::knit('",template.loc,"',output='",basename(md.file),"')\n",sep=''))
+            ## attempt 1:
+            # could do this with deparse(call(...)) but don't see how to put the 'knitr::' into the call...
+            # knit.call <- do.call( call, c( list( "knit", template.loc, output=basename(md.file) ), lapply(as.list(substitute(list(...)))[-1L],deparse) ) )
+            # cat( paste0("knitr::", paste(deparse(knit.call,width.cutoff=500L),collapse=" ")), "\n" )
+            ## attempt 2:
+            dotargs <- as.list(substitute(list(...)))[-1L]
+            dotarg.string <- paste( names(dotargs), sapply( dotargs, deparse ), sep="=", collapse=", " )
+            knit.call <- call( "knit", template.loc, output=basename(md.file) )
+            cat( gsub( ") *$", paste(",",dotarg.string,")"), paste( deparse(knit.call,width.cutoff=500L), collapse=" ") ), "\n")
+        }
+        # change directory so that paths are correct relative to where the markdown file is
+        setwd(md.dir)
+        on.exit(setwd(thisdir),add=TRUE)
+        knitr::opts_chunk$set( fig.path=file.path("figure",outbase,""),
+                               cache.path=file.path("cache",outbase,"") )
+        if (length(opts.knit)>0) { do.call( knitr::opts_knit$set, opts.knit ) }
+        knitr::knit(template.loc,output=basename(md.file),...)
     }
-    # change directory so that paths are correct relative to where the markdown file is
-    setwd(md.dir)
-    on.exit(setwd(thisdir),add=TRUE)
-	knitr::opts_chunk$set( fig.path=file.path("figure",outbase,""),
-                           cache.path=file.path("cache",outbase,"") )
-    if (length(opts.knit)>0) { do.call( knitr::opts_knit$set, opts.knit ) }
-    knitr::knit(template.loc,output=basename(md.file),...)
     if (html) {
         dir.create(dirname(output.loc),showWarnings=FALSE,recursive=TRUE)
         if (verbose) cat("Using pandoc to write html output to", output.loc, "\n")
