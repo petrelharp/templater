@@ -18,6 +18,7 @@
 #' @param verbose Whether to print commands sufficient to recreate what is done.
 #' @param clean Whether to delete intermediate files (the .md file, if the output is html).
 #' @param width The width of the container (in valid html code).
+#' @param pandoc.exec Name of the pandoc executable.
 #' @param ... Additional parameters passed to \code{knitr::knit()}.
 #' @export
 #' @return The name of the output file.
@@ -36,7 +37,6 @@
 #' The html document produced will use the copy of MathJax at \code{mathjax.loc} if it is not NULL and that file is present,
 #' but will fall back on the CDN \code{https://cdn.mathjax.org/mathjax/latest/MathJax.js} if it is not.
 #' 
-#'
 #' If you want the code in the .Rmd file to be evaluated in the current environment,
 #' as is the default if you call \code{knit("myfile.Rmd")}, then pass the option
 #' \code{envir=environment()} (or, \code{envir=globalenv()} if you want the global environment).
@@ -52,8 +52,12 @@ render_template <- function ( template,
                            verbose=TRUE,
                            clean=FALSE,
                            width="940px",
+                           pandoc.exec="pandoc",
                            ...
                        ) {
+    if (nchar(Sys.which(pandoc.exec))==0) {
+        stop("It looks like pandoc is not installed or not available -- see http://pandoc.org/installing.html for installation.")
+    }
     pandoc.only <- (missing(template) && ! missing(md.file))
     if (pandoc.only) { output <- gsub("[.](Rmd|md)$", ".html", md.file) }
     if (dir.exists(output)) { stop(paste("Can't write to output file", output, "since it's actually a directory.")) }
@@ -101,8 +105,8 @@ render_template <- function ( template,
     if (html) {
         dir.create(dirname(output.loc),showWarnings=FALSE,recursive=TRUE)
         if (verbose) cat("Using pandoc to write html output to", output.loc, "\n")
-        if (verbose) cat("pandoc", c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ),"\n" )
-        system2( "pandoc", args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ) )
+        if (verbose) cat(pandoc.exec, c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ),"\n" )
+        system2( pandoc.exec, args=c( basename(md.file), .pandoc.opts(resource.dir.loc,macros=macros.loc,.local.mathjax=mathjax.loc,width=width), paste("--output", output.loc) ) )
         if (clean) {
             if (verbose) cat(sprintf("unlink(%s)",md.file),"\n")
             unlink(md.file)

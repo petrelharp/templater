@@ -9,7 +9,7 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
   output), resource.dir = system.file(package = "templater"),
   macros = "macros.tex", opts.knit = NULL, change.rootdir = FALSE,
   mathjax.loc = "/usr/share/javascript/mathjax/MathJax.js", verbose = TRUE,
-  clean = FALSE, width = "940px", ...)
+  clean = FALSE, width = "940px", pandoc.exec = "pandoc", ...)
 }
 \arguments{
 \item{template}{Name of .Rmd file.}
@@ -36,6 +36,8 @@ render_template(template, output = gsub("[.](Rmd|md)$", ".html", template),
 
 \item{width}{The width of the container (in valid html code).}
 
+\item{pandoc.exec}{Name of the pandoc executable.}
+
 \item{...}{Additional parameters passed to \code{knitr::knit()}.}
 }
 \value{
@@ -55,7 +57,6 @@ which is not necessarily in the same directory as the template.
 The html document produced will use the copy of MathJax at \code{mathjax.loc} if it is not NULL and that file is present,
 but will fall back on the CDN \code{https://cdn.mathjax.org/mathjax/latest/MathJax.js} if it is not.
 
-
 If you want the code in the .Rmd file to be evaluated in the current environment,
 as is the default if you call \code{knit("myfile.Rmd")}, then pass the option
 \code{envir=environment()} (or, \code{envir=globalenv()} if you want the global environment).
@@ -66,4 +67,3 @@ directing output to the given output name,
 and doing this in a way that doesn't cause collisions 
 between parallel instances of this script.
 }
-

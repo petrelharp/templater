@@ -15,4 +15,3 @@ A logical vector.
 \description{
 Absolute paths start with either ~ or / (linux) or X:/ or X:\\ (windows).
 }
-

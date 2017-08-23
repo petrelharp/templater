@@ -21,4 +21,3 @@ The name of the output file.
 Writes out the given table to a text file to the currently used cache directory,
 and returns the path to the file written.
 }
-

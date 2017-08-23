@@ -10,4 +10,4 @@ Depends:
 License: GPL >= 2.0
 LazyData: true
 Requires: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
