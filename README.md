@@ -12,6 +12,18 @@ Features:
 - Evaluation in current or target directory.
 - Control the width of the html output.
 
+## Installing
+
+Prerequisites:
+
+- [pandoc](http://pandoc.org/installing.html)
+
+Install using `devtools`:
+```
+library(devtools)
+install_github("petrelharp/templater")
+```
+
 ## How?
 
 There are two basic use cases, that differ in whether you write your template 
